@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Döviz Çevirici</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/png"
+          href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a href="/" class="nav-logo">
+                <i class="fa-solid fa-calculator"></i>
+                <span>Flask RestAPI Döviz Çevirici</span>
+            </a>
+
+            <!-- Center - Soyal Medya -->
+            <div class="nav-center">
+                <a href="https://github.com/mustafaaesen" target="_blank" rel="noopener" class="social-link github">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/mustafaesen/" target="_blank" rel="noopener" class="social-link linkedin">
+                    <i class="fa-brands fa-linkedin"></i>
+                </a>
+                <a href="https://github.com/mustafaaesen" target="_blank" rel="noopener" class="social-link facebook">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/mustafaesen/" target="_blank" rel="noopener" class="social-link instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://github.com/mustafaaesen" target="_blank" rel="noopener" class="social-link twitter">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+                <a href="https://medium.com/@mustafaaeesen" target="_blank" rel="noopener" class="social-link medium">
+                    <i class="fa-brands fa-medium"></i>
+                </a>
+                <a href="http://mustafaesen.com.tr" target="_blank" rel="noopener" class="social-link website">
+                    <i class="fa-solid fa-globe"></i>
+                </a>
+            </div>
+
+            <!-- Sağ - Hesapla butonu ve hamburger -->
+            <div class="nav-right">
+                <a href="#converter" class="btn-calculate">Hesapla</a>
+                <button class="hamburger" aria-label="Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobil Menu -->
+        <div class="mobile-menu">
+            <a href="#converter" class="btn-calculate">Hesapla</a>
+            <div class="mobile-social">
+                <a href="https://github.com/mustafaaesen" target="_blank" rel="noopener" class="social-link github">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/mustafaesen/" target="_blank" rel="noopener" class="social-link linkedin">
+                    <i class="fa-brands fa-linkedin"></i>
+                </a>
+                <a href="https://github.com/mustafaaesen" target="_blank" rel="noopener" class="social-link facebook">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/mustafaesen/" target="_blank" rel="noopener" class="social-link instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://github.com/mustafaaesen" target="_blank" rel="noopener" class="social-link twitter">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+                <a href="https://medium.com/@mustafaaeesen" target="_blank" rel="noopener" class="social-link medium">
+                    <i class="fa-brands fa-medium"></i>
+                </a>
+                <a href="http://mustafaesen.com.tr/" target="_blank" rel="noopener" class="social-link website">
+                    <i class="fa-solid fa-globe"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <br>
+    <div class="container">
+    <br>
+        <div class="main-content">
+            
+            <!-- Sol bölüm - Döviz kurları -->
+            <div class="left-section">
+                <section class="rates-section">
+                
+                    <div class="card rates-card">
+                        <div class="rates-header">
+                            <h2 class="rates-title">Güncel Döviz Kurları</h2>
+                            <p class="rates-subtitle">Euro (EUR) bazlı canlı döviz kurları</p>
+                        </div>
+                        
+                        <div class="rates-grid">
+                            {% for code, rate in rates.items()|sort %}
+                            <div class="currency-card">
+                                <div class="currency-info">
+                                    <div class="currency-flag">{{ get_currency_flag(code) }}</div>
+                                    <div class="currency-details">
+                                        <span class="currency-code">{{ code }}</span>
+                                        <span class="currency-name">{{ get_currency_name(code) }}</span>
+                                    </div>
+                                </div>
+                                <div class="currency-rate">
+                                    <span class="rate-label">Kur</span>
+                                    <span class="rate-value">{{ "%.4f"|format(rate) }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Sağ bölüm - Dönüştürücü -->
+            <div class="right-section">
+                <section class="converter-section" id="converter">
+                    <div class="card converter-card">
+                        <div class="converter-header">
+                            <h1 class="converter-title">Döviz Hesapla</h1>
+                            <p class="converter-subtitle">
+                                Anlık döviz kurları ile hızlı ve kolay para birimi çevirisi yapın
+                            </p>
+                        </div>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-container">
+                        {% for category, message in messages %}
+                            <div class="flash flash-{{ category }}">
+                            {{ message }}
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% endwith %}
+                     <form method="POST" class="converter-form">
+                            <!-- Değer alma -->
+                            <div class="form-group">
+                                <label for="amount" class="form-label">Miktar</label>
+                                <input 
+                                    type="number" 
+                                    id="amount" 
+                                    name="amount" 
+                                    class="form-input" 
+                                    step="0.01" 
+                                    placeholder="Tutar giriniz" 
+                                    value="{{ request.form.amount if request.form.amount else '' }}"
+                                    required>
+                            </div>
+
+                            <!-- kaynak para-->
+                            <div class="form-group">
+                                <label for="from_currency" class="form-label">Kaynak Para Birimi</label>
+                                <select id="from_currency" name="from_currency" class="form-select" required>
+                                    {% for code in rates.keys()|sort %}
+                                    <option value="{{ code }}" 
+                                            {{ 'selected' if (request.form.from_currency == code) or (not request.form.from_currency and code == 'EUR') else '' }}>
+                                        {{ get_currency_flag(code) }} {{ code }} - {{ get_currency_name(code) }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- hedef para -->
+                            <div class="form-group">
+                                <label for="to_currency" class="form-label">Hedef Para Birimi</label>
+                                <select id="to_currency" name="to_currency" class="form-select" required>
+                                    {% for code in rates.keys()|sort %}
+                                    <option value="{{ code }}" 
+                                            {{ 'selected' if (request.form.to_currency == code) or (not request.form.to_currency and code == 'TRY') else '' }}>
+                                        {{ get_currency_flag(code) }} {{ code }} - {{ get_currency_name(code) }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Hesaplanan tutar -->
+                            <div class="exchange-rate">
+                                <div class="exchange-rate-label">Çevrilen Tutar</div>
+                                <div class="rate-value-large">
+                                    {% if result %}
+                                        {{ "%.2f"|format(result) }}
+                                    {% else %}
+                                        0.00
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- eçvir butonu -->
+                            <button type="submit" class="btn-convert">Çevir</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- Sol - Copyright -->
+            <div class="footer-left">
+                <i class="fa-regular fa-copyright"></i>
+                <span>2026 Döviz Çevirici</span>
+            </div>
+
+            <!-- Merkez - Sosyal Medya-->
+            <div class="footer-center">
+                <a href="https://github.com/mustafaaesen" target="_blank" rel="noopener" class="social-link github">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/mustafaesen/" target="_blank" rel="noopener" class="social-link linkedin">
+                    <i class="fa-brands fa-linkedin"></i>
+                </a>
+                <a href="https://github.com/mustafaaesen" target="_blank" rel="noopener" class="social-link facebook">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/mustafaesen/" target="_blank" rel="noopener" class="social-link instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://github.com/mustafaaesen" target="_blank" rel="noopener" class="social-link twitter">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+                <a href="https://medium.com/@mustafaaeesen" target="_blank" rel="noopener" class="social-link medium">
+                    <i class="fa-brands fa-medium"></i>
+                </a>
+                <a href="http://mustafaesen.com.tr/" target="_blank" rel="noopener" class="social-link website">
+                    <i class="fa-solid fa-globe"></i>
+                </a>
+            </div>
+
+            <!-- Sağ - Yapan&Apı sağlayıcı -->
+            <div class="footer-right">
+                <div class="footer-right">
+                    <span>Made By </span>
+                    <a href="http://mustafaesen.com.tr/" target="_blank" rel="noopener" class="footer-link">mustafaesen</a>
+                </div>
+                <div class="footer-right">
+                    <span>Data Provided By</span>
+                    <a href="https://frankfurter.dev/" target="_blank" rel="noopener" class="footer-link">frankfurter</a>
+                </div>
+        </div>
+    </footer>
+
+    <script>
+    // 
+        window.rates = {{ rates|tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+<script>
+  setTimeout(() => {
+    document.querySelectorAll('.flash').forEach(el => {
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 300);
+    });
+  }, 3000);
+</script>
+
+</html>
