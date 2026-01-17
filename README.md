@@ -13,7 +13,7 @@ FlaskDövizÇevirici → https://exchangeconverter.pythonanywhere.com
 
 ## Proje Mimarisi
 
-![Proje Mimarisi](screenshots/dovizcevirici.png)
+![Proje Mimarisi](screenshots/dovizceviriciarch.png)
 
 
 ## Proje Klasör Yapısı
