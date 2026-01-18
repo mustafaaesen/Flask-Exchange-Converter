@@ -85,10 +85,12 @@ function updateExchangeRate() {
 // Toggle mobile menu
 function toggleMobileMenu() {
   const mobileMenu = document.querySelector('.mobile-menu');
-  mobileMenu.classList.toggle('active');
+  if (mobileMenu) {
+    mobileMenu.classList.toggle('active');
+  }
 }
 
-// scrollu dönüştürücü
+// scrollu dönüştürücü (hamburger → hesapla)
 function scrollToConverter(e) {
   e.preventDefault();
   const converter = document.getElementById('converter');
@@ -101,22 +103,40 @@ function scrollToConverter(e) {
   }
 }
 
+// sayfa yüklendiğinde otomatik scroll (SONUÇ VARSA)
+function autoScrollIfResultExists() {
+  const rateDisplay = document.querySelector('.rate-value-large');
+  const converter = document.getElementById('converter');
+
+  if (
+    rateDisplay &&
+    rateDisplay.textContent &&
+    rateDisplay.textContent.trim() !== '0' &&
+    converter
+  ) {
+    setTimeout(() => {
+      converter.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 150);
+  }
+}
+
 // sayfa tanıtımı
 document.addEventListener('DOMContentLoaded', function() {
-  const amountInput = document.getElementById('amount');
-  const fromSelect = document.getElementById('from_currency');
-  const toSelect = document.getElementById('to_currency');
-
-
   // Mobile menu toggle
   const hamburger = document.querySelector('.hamburger');
   if (hamburger) {
     hamburger.addEventListener('click', toggleMobileMenu);
   }
 
-  //hesapla scroll
+  // hesapla scroll
   const calcButtons = document.querySelectorAll('.btn-calculate');
   calcButtons.forEach(btn => {
     btn.addEventListener('click', scrollToConverter);
   });
+
+  // 🔥 YENİ: reload sonrası otomatik scroll
+  autoScrollIfResultExists();
 });
